@@ -17,19 +17,19 @@ int main(int argc, char **argv)
 	char send_data[1024];
 	struct hostent *host;
 	struct sockaddr_in server_addr;
-	int  packets = 0, max_value=0;
+	int  packets = 3, max_value=10;
+
 	packets = atoi(argv[3]);
 	max_value = atoi(argv[4]);
 	host = gethostbyname(argv[1]);
 
 	if ((sock = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
-		perror("Socket");
-		exit(1);
+		perror("Socket error");
+		exit(EXIT_FAILURE);
 	}
 
 	server_addr.sin_family = AF_INET;
 	server_addr.sin_port = htons(atoi(argv[2]));
-
 	server_addr.sin_addr = *((struct in_addr *)host->h_addr);
 	bzero(&(server_addr.sin_zero),8);
 
@@ -37,7 +37,7 @@ int main(int argc, char **argv)
 			sizeof(struct sockaddr)) == -1)
 	{
 		perror("Connect error");
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 	while(packets) {
 		create_data(send_data, max_value);
